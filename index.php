@@ -264,7 +264,7 @@ switch ($action) {
 
     case "rental_list":
 
-        requireRole(["agent_location"]);
+        requireRole(["agent_location", "responsable_inventaire"]);
 
         $controller = new RentalController();
         $controller->list();
@@ -301,7 +301,15 @@ switch ($action) {
 
         break;
 
+        case "rental_return":
 
+        // Le Responsable Inventaire contrôle l'état, l'Agent enregistre les frais
+        requireRole(["agent_location", "responsable_inventaire"]);
+
+        $controller = new RentalController();
+        $controller->returnEquipment();
+
+        break;
     /* =========================================================
        DEFAULT
        ========================================================= */

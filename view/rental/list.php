@@ -83,6 +83,16 @@
 
             <td>
 
+                <?php if (in_array($rental["statut"], ["confirmee", "en_cours"])): ?>
+
+                    <a href="index.php?action=rental_return&id=<?= $rental["id"] ?>">
+                        <strong>Traiter le retour</strong>
+                    </a>
+
+                    |
+
+                <?php endif; ?>
+
                 <a href="index.php?action=rental_edit&id=<?= $rental["id"] ?>">
                     Modifier
                 </a>

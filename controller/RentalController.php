@@ -258,4 +258,82 @@ class RentalController
         header("Location: index.php?action=rental_list");
         exit;
     }
+        // Traiter le retour d'une location
+    // (validation par le Responsable Inventaire + frais additionnels par l'Agent)
+    public function returnEquipment()
+    {
+        $id = $_GET["id"] ?? null;
+
+        if (!$id) {
+            echo "Location introuvable.";
+            return;
+        }
+
+        $rental = $this->rental->getById($id);
+
+        if (!$rental) {
+            echo "Location introuvable.";
+            return;
+        }
+
+        // On ne peut traiter un retour que si la location est active
+        if (!in_array($rental["statut"], ["confirmee", "en_cours"])) {
+            echo "Cette location n'est pas en cours, impossible de traiter un retour.";
+            return;
+        }
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+            $etat_retour = $_POST["etat_retour"] ?? "";
+            $frais_additionnels = trim($_POST["frais_additionnels"] ?? "0");
+            $date_retour = trim($_POST["date_retour"] ?? "");
+
+            // États possibles au retour, contrôlés par le Responsable Inventaire
+            $etatsValides = ["disponible", "maintenance", "endommage"];
+
+            if (empty($date_retour) || !in_array($etat_retour, $etatsValides)) {
+                $message = "Veuillez remplir correctement tous les champs.";
+                require "view/rental/return.php";
+                return;
+            }
+
+            $retour = DateTime::createFromFormat("Y-m-d", $date_retour);
+            $debut = DateTime::createFromFormat("Y-m-d", $rental["date_debut"]);
+
+            if (!$retour || $retour < $debut) {
+                $message = "La date de retour n'est pas valide.";
+                require "view/rental/return.php";
+                return;
+            }
+
+            if (!is_numeric($frais_additionnels) || $frais_additionnels < 0) {
+                $message = "Les frais additionnels doivent être un nombre positif.";
+                require "view/rental/return.php";
+                return;
+            }
+
+            // Recalcul du prix total (durée initiale + frais additionnels du retour)
+            $prix_total = ($rental["duree"] * $rental["prix_jour"]) + $frais_additionnels;
+
+            $this->rental->update(
+                $id,
+                $rental["date_debut"],
+                $rental["date_fin"],
+                $rental["duree"],
+                $prix_total,
+                "terminee",
+                $frais_additionnels,
+                $date_retour
+            );
+
+            // L'état final de l'équipement dépend du contrôle du Responsable Inventaire
+            // (disponible si tout va bien, maintenance ou endommagé sinon)
+            $this->equipment->updateEtat($rental["equipment_id"], $etat_retour);
+
+            header("Location: index.php?action=rental_list");
+            exit;
+        }
+
+        require "view/rental/return.php";
+    }
 }
