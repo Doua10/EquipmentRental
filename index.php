@@ -6,6 +6,7 @@ session_start();
 require_once "controller/CategoryController.php";
 require_once "controller/EquipmentController.php";
 require_once "controller/UserController.php";
+require_once "controller/RentalController.php";
 
 /*
 |--------------------------------------------------------------------------
@@ -265,7 +266,8 @@ switch ($action) {
 
         requireRole(["agent_location"]);
 
-        require "view/rental/list.php";
+        $controller = new RentalController();
+        $controller->list();
 
         break;
 
@@ -274,7 +276,8 @@ switch ($action) {
 
         requireRole(["agent_location"]);
 
-        require "view/rental/add.php";
+        $controller = new RentalController();
+        $controller->add();
 
         break;
 
@@ -283,7 +286,18 @@ switch ($action) {
 
         requireRole(["agent_location"]);
 
-        require "view/rental/edit.php";
+        $controller = new RentalController();
+        $controller->edit();
+
+        break;
+
+
+    case "rental_delete":
+
+        requireRole(["agent_location"]);
+
+        $controller = new RentalController();
+        $controller->delete();
 
         break;
 

@@ -106,6 +106,16 @@ class Equipment
         return $stmt->execute([$id]);
     }
 
+    // Changer uniquement l'état (utilisé par le module Rental)
+    public function updateEtat($id, $etat)
+    {
+        $sql = "UPDATE equipments SET etat = ? WHERE id = ?";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        return $stmt->execute([$etat, $id]);
+    }
+
     public function search($mot)
     {
         $sql = "SELECT equipments.*, categories.nom AS categorie_nom
