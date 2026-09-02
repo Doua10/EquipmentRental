@@ -1,18 +1,113 @@
+
 <?php
+
+session_start();
 
 require_once "controller/CategoryController.php";
 require_once "controller/EquipmentController.php";
 require_once "controller/UserController.php";
 
-$action = $_GET["action"] ?? "category_list";
+/*
+|--------------------------------------------------------------------------
+| Vérification de connexion
+|--------------------------------------------------------------------------
+*/
+
+function requireLogin()
+{
+    if (!isset($_SESSION["user_id"])) {
+        header("Location: index.php?action=login");
+        exit;
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Vérification du rôle
+|--------------------------------------------------------------------------
+*/
+
+function requireRole($roles)
+{
+    requireLogin();
+
+    if (!in_array($_SESSION["role"], $roles)) {
+        header("Location: index.php?action=access_denied");
+        exit;
+    }
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| Action demandée
+|--------------------------------------------------------------------------
+*/
+
+$action = $_GET["action"] ?? "login";
+
 
 switch ($action) {
 
-    /* =========================
+    /* =========================================================
+       LOGIN
+       ========================================================= */
+
+    case "login":
+
+        $controller = new UserController();
+        $controller->login();
+
+        break;
+
+
+    /* =========================================================
+       LOGOUT
+       ========================================================= */
+
+    case "logout":
+
+        session_unset();
+        session_destroy();
+
+        header("Location: index.php?action=login");
+        exit;
+
+        break;
+
+
+    /* =========================================================
+       ACCESS DENIED
+       ========================================================= */
+
+    case "access_denied":
+
+        require "view/access_denied.php";
+
+        break;
+
+
+    /* =========================================================
+       DASHBOARD
+       ========================================================= */
+
+    case "dashboard":
+
+        requireLogin();
+
+        require "view/dashboard.php";
+
+        break;
+
+
+    /* =========================================================
        CATEGORY
-       ========================= */
+       Responsable Inventaire uniquement
+       ========================================================= */
 
     case "category_list":
+
+        requireRole(["responsable_inventaire"]);
 
         $controller = new CategoryController();
         $controller->list();
@@ -22,6 +117,8 @@ switch ($action) {
 
     case "category_add":
 
+        requireRole(["responsable_inventaire"]);
+
         $controller = new CategoryController();
         $controller->add();
 
@@ -29,6 +126,8 @@ switch ($action) {
 
 
     case "category_edit":
+
+        requireRole(["responsable_inventaire"]);
 
         $controller = new CategoryController();
         $controller->edit();
@@ -38,17 +137,22 @@ switch ($action) {
 
     case "category_delete":
 
+        requireRole(["responsable_inventaire"]);
+
         $controller = new CategoryController();
         $controller->delete();
 
         break;
 
 
-    /* =========================
+    /* =========================================================
        EQUIPMENT
-       ========================= */
+       Responsable Inventaire uniquement
+       ========================================================= */
 
     case "equipment_list":
+
+        requireRole(["responsable_inventaire"]);
 
         $controller = new EquipmentController();
         $controller->list();
@@ -58,6 +162,8 @@ switch ($action) {
 
     case "equipment_add":
 
+        requireRole(["responsable_inventaire"]);
+
         $controller = new EquipmentController();
         $controller->add();
 
@@ -65,6 +171,8 @@ switch ($action) {
 
 
     case "equipment_edit":
+
+        requireRole(["responsable_inventaire"]);
 
         $controller = new EquipmentController();
         $controller->edit();
@@ -74,6 +182,8 @@ switch ($action) {
 
     case "equipment_delete":
 
+        requireRole(["responsable_inventaire"]);
+
         $controller = new EquipmentController();
         $controller->delete();
 
@@ -82,51 +192,106 @@ switch ($action) {
 
     case "equipment_search":
 
+        requireRole(["responsable_inventaire"]);
+
         $controller = new EquipmentController();
         $controller->search();
 
         break;
-    /* =========================
-       user
-       ========================= */
+
+
+    /* =========================================================
+       USER
+       Responsable Inventaire uniquement
+       ========================================================= */
 
     case "user_list":
 
-    $controller = new UserController();
-    $controller->list();
+        requireRole(["responsable_inventaire"]);
 
-    break;
+        $controller = new UserController();
+        $controller->list();
+
+        break;
 
 
     case "user_add":
 
-    $controller = new UserController();
-    $controller->add();
+        requireRole(["responsable_inventaire"]);
 
-    break;
+        $controller = new UserController();
+        $controller->add();
+
+        break;
 
 
     case "user_edit":
 
-    $controller = new UserController();
-    $controller->edit();
+        requireRole(["responsable_inventaire"]);
 
-    break;
+        $controller = new UserController();
+        $controller->edit();
+
+        break;
 
 
     case "user_delete":
 
-    $controller = new UserController();
-    $controller->delete();
-    break;
+        requireRole(["responsable_inventaire"]);
+
+        $controller = new UserController();
+        $controller->delete();
+
+        break;
 
 
     case "user_search":
 
-    $controller = new UserController();
-    $controller->search();
+        requireRole(["responsable_inventaire"]);
 
-    break;
+        $controller = new UserController();
+        $controller->search();
+
+        break;
+
+
+    /* =========================================================
+       RENTAL
+       Agent Location
+       À développer ensuite
+       ========================================================= */
+
+    case "rental_list":
+
+        requireRole(["agent_location"]);
+
+        require "view/rental/list.php";
+
+        break;
+
+
+    case "rental_add":
+
+        requireRole(["agent_location"]);
+
+        require "view/rental/add.php";
+
+        break;
+
+
+    case "rental_edit":
+
+        requireRole(["agent_location"]);
+
+        require "view/rental/edit.php";
+
+        break;
+
+
+    /* =========================================================
+       DEFAULT
+       ========================================================= */
+
     default:
 
         echo "Page introuvable.";

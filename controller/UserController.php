@@ -202,5 +202,56 @@ class UserController
         $users = $this->user->search($mot);
 
         require "view/user/list.php";
+        }
+        public function login()
+{
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+        $email = trim($_POST["email"]);
+        $mot_de_passe = $_POST["mot_de_passe"];
+
+        // Vérification des champs
+        if (empty($email) || empty($mot_de_passe)) {
+            $error = "Veuillez remplir tous les champs.";
+            require "view/user/login.php";
+            return;
+        }
+
+        // Recherche de l'utilisateur
+        $user = $this->user->getByEmail($email);
+
+        // Vérification du mot de passe
+        if ($user && password_verify($mot_de_passe, $user["mot_de_passe"])) {
+
+            // Création de la session
+            session_start();
+
+            $_SESSION["user_id"] = $user["id"];
+            $_SESSION["nom"] = $user["nom"];
+            $_SESSION["prenom"] = $user["prenom"];
+            $_SESSION["role"] = $user["role"];
+
+            // Redirection selon le rôle
+            if ($user["role"] === "responsable_inventaire") {
+                header("Location: index.php?action=equipment_list");
+                exit();
+
+            } elseif ($user["role"] === "agent_location") {
+                header("Location: index.php?action=rental_list");
+                exit();
+
+            } elseif ($user["role"] === "client") {
+                header("Location: index.php?action=equipment_list");
+                exit();
+            }
+
+        } else {
+            $error = "Email ou mot de passe incorrect.";
+            require "view/user/login.php";
+        }
+
+    } else {
+        require "view/user/login.php";
     }
+}
 }

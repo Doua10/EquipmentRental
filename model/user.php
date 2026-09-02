@@ -127,4 +127,15 @@ class User
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Rechercher un utilisateur par son email
+    public function getByEmail($email)
+    {
+        $sql = "SELECT *
+            FROM users
+            WHERE email = ?";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute([$email]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
