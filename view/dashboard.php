@@ -166,15 +166,25 @@ $role = $_SESSION['role'] ?? '';
 
         <?php elseif ($role === 'client'): ?>
 
-            <div class="card">
-                <h3>Catalogue</h3>
-                <p>Consulter les équipements disponibles.</p>
-                <a href="index.php?action=equipment_list">
-                    Voir le catalogue
-                </a>
-            </div>
+    <div class="card">
+        <h3>Catalogue</h3>
+        <p>Consulter les équipements disponibles.</p>
 
-        <?php endif; ?>
+        <a href="index.php?action=client_catalogue">
+            Voir le catalogue
+        </a>
+    </div>
+
+    <div class="card">
+        <h3>Mes locations</h3>
+        <p>Suivre vos demandes de location.</p>
+
+        <a href="index.php?action=client_rental_list">
+            Voir mes locations
+        </a>
+    </div>
+
+<?php endif; ?>
 
     </div>
 

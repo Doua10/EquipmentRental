@@ -336,4 +336,119 @@ class RentalController
 
         require "view/rental/return.php";
     }
+
+    /* =========================================================
+       CÔTÉ CLIENT
+       Le client fait une demande, l'agent la confirme ensuite
+       ========================================================= */
+
+    // Le client demande une location pour un équipement précis
+    public function clientAdd()
+    {
+        $equipment_id = $_GET["equipment_id"] ?? $_POST["equipment_id"] ?? null;
+
+        if (!$equipment_id) {
+            echo "Équipement introuvable.";
+            return;
+        }
+
+        $equipmentData = $this->equipment->getById($equipment_id);
+
+        if (!$equipmentData) {
+            echo "Équipement introuvable.";
+            return;
+        }
+
+        $user_id = $_SESSION["user_id"];
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+            $date_debut = trim($_POST["date_debut"] ?? "");
+            $date_fin = trim($_POST["date_fin"] ?? "");
+
+            // Vérification des champs obligatoires
+            if (empty($date_debut) || empty($date_fin)) {
+                $message = "Veuillez remplir tous les champs.";
+                require "view/rental/client_add.php";
+                return;
+            }
+
+            // Vérification format des dates
+            $debut = DateTime::createFromFormat("Y-m-d", $date_debut);
+            $fin = DateTime::createFromFormat("Y-m-d", $date_fin);
+
+            if (!$debut || !$fin) {
+                $message = "Dates invalides.";
+                require "view/rental/client_add.php";
+                return;
+            }
+
+            // La date de fin doit être après (ou égale à) la date de début
+            if ($fin < $debut) {
+                $message = "La date de fin doit être après la date de début.";
+                require "view/rental/client_add.php";
+                return;
+            }
+
+            // Pas de location dans le passé
+            $today = new DateTime("today");
+            if ($debut < $today) {
+                $message = "La date de début ne peut pas être dans le passé.";
+                require "view/rental/client_add.php";
+                return;
+            }
+
+            // Calcul automatique de la durée (en jours, inclusif)
+            $duree = $debut->diff($fin)->days + 1;
+
+            if ($equipmentData["etat"] !== "disponible") {
+                $message = "Cet équipement n'est pas disponible (état actuel : " . $equipmentData["etat"] . ").";
+                require "view/rental/client_add.php";
+                return;
+            }
+
+            // Vérification de disponibilité sur les dates demandées
+            if (!$this->rental->isAvailable($equipment_id, $date_debut, $date_fin)) {
+                $message = "Cet équipement est déjà réservé sur cette période.";
+                require "view/rental/client_add.php";
+                return;
+            }
+
+            // Calcul automatique du prix (tarif de l'équipement, pas saisi par le client)
+            $prix_jour = $equipmentData["prix_jour"];
+            $prix_total = $prix_jour * $duree;
+
+            // La demande du client est en attente de validation par l'agent
+            $statut = "en_attente";
+
+            $this->rental->add(
+                $user_id,
+                $equipment_id,
+                $date_debut,
+                $date_fin,
+                $duree,
+                $prix_jour,
+                $prix_total,
+                $statut
+            );
+
+            // On réserve l'équipement le temps que l'agent traite la demande
+            $this->equipment->updateEtat($equipment_id, "en_location");
+
+            header("Location: index.php?action=client_rental_list");
+            exit;
+        }
+
+        require "view/rental/client_add.php";
+    }
+
+    // Le client consulte l'historique de ses propres locations
+    public function clientList()
+    {
+        $user_id = $_SESSION["user_id"];
+
+        $rentals = $this->rental->getByUserId($user_id);
+
+        require "view/rental/client_list.php";
+    }
 }

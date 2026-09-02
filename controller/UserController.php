@@ -221,31 +221,20 @@ class UserController
         $user = $this->user->getByEmail($email);
 
         // Vérification du mot de passe
-        if ($user && password_verify($mot_de_passe, $user["mot_de_passe"])) {
+if ($user && password_verify($mot_de_passe, $user["mot_de_passe"])) {
 
-            // Création de la session
-            session_start();
+    // Création de la session
+    $_SESSION["user_id"] = $user["id"];
+    $_SESSION["nom"] = $user["nom"];
+    $_SESSION["prenom"] = $user["prenom"];
+    $_SESSION["role"] = $user["role"];
 
-            $_SESSION["user_id"] = $user["id"];
-            $_SESSION["nom"] = $user["nom"];
-            $_SESSION["prenom"] = $user["prenom"];
-            $_SESSION["role"] = $user["role"];
+    // Redirection temporaire pour tester la session
+    header("Location: index.php?action=dashboard");
+    exit();
 
-            // Redirection selon le rôle
-            if ($user["role"] === "responsable_inventaire") {
-                header("Location: index.php?action=equipment_list");
-                exit();
-
-            } elseif ($user["role"] === "agent_location") {
-                header("Location: index.php?action=rental_list");
-                exit();
-
-            } elseif ($user["role"] === "client") {
-                header("Location: index.php?action=equipment_list");
-                exit();
-            }
-
-        } else {
+}
+        else {
             $error = "Email ou mot de passe incorrect.";
             require "view/user/login.php";
         }

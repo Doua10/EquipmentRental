@@ -153,7 +153,7 @@ switch ($action) {
 
     case "equipment_list":
 
-        requireRole(["responsable_inventaire"]);
+        requireRole(["responsable_inventaire", "client"]);
 
         $controller = new EquipmentController();
         $controller->list();
@@ -199,7 +199,19 @@ switch ($action) {
         $controller->search();
 
         break;
+    /* =========================================================
+   CLIENT CATALOGUE
+   Client uniquement
+   ========================================================= */
 
+case "client_catalogue":
+
+    requireRole(["client"]);
+
+    $controller = new EquipmentController();
+    $controller->clientCatalogue();
+
+    break;
 
     /* =========================================================
        USER
@@ -310,6 +322,31 @@ switch ($action) {
         $controller->returnEquipment();
 
         break;
+    /* =========================================================
+       RENTAL - CÔTÉ CLIENT
+       Client uniquement
+       ========================================================= */
+
+    case "client_rental_add":
+
+        requireRole(["client"]);
+
+        $controller = new RentalController();
+        $controller->clientAdd();
+
+        break;
+
+
+    case "client_rental_list":
+
+        requireRole(["client"]);
+
+        $controller = new RentalController();
+        $controller->clientList();
+
+        break;
+
+
     /* =========================================================
        DEFAULT
        ========================================================= */

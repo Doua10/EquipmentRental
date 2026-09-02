@@ -2,11 +2,13 @@
 
 require_once "model/Database.php";
 require_once "model/Equipment.php";
+require_once "model/Category.php";
 
 class EquipmentController
 {
     private $equipment;
     private $pdo;
+    private $category;
 
     public function __construct()
     {
@@ -14,16 +16,21 @@ class EquipmentController
         $this->pdo = $database->getConnection();
 
         $this->equipment = new Equipment($this->pdo);
+        $this->category = new Category($this->pdo);
     }
 
     // Afficher tous les équipements
     public function list()
     {
-        $equipments = $this->equipment->getAll();
+    $equipments = $this->equipment->getAll();
 
-        require "view/equipment/list.php";
-    }
+    // Récupérer les catégories pour le formulaire de recherche
+    $categories = $this->category->getAll();
 
+    $error = "";
+
+    require "view/equipment/list.php";
+   }
     // Ajouter un équipement
     public function add()
     {
@@ -162,13 +169,94 @@ class EquipmentController
         exit;
     }
 
-    // Rechercher un équipement
+    // Recherche multicritères d'un équipement
     public function search()
-    {
-        $mot = $_GET["mot"] ?? "";
+{
+    $criteres = [
+        "mot" => trim($_GET["mot"] ?? ""),
+        "categorie_id" => $_GET["categorie_id"] ?? "",
+        "etat" => $_GET["etat"] ?? "",
+        "prix_min" => $_GET["prix_min"] ?? "",
+        "prix_max" => $_GET["prix_max"] ?? "",
+        "stock_min" => $_GET["stock_min"] ?? "",
+        "stock_max" => $_GET["stock_max"] ?? ""
+    ];
 
-        $equipments = $this->equipment->search($mot);
+    $categories = $this->category->getAll();
+    $error = "";
 
-        require "view/equipment/list.php";
+    // Contrôles côté PHP
+    if (
+        $criteres["categorie_id"] !== "" &&
+        !ctype_digit((string) $criteres["categorie_id"])
+    ) {
+        $error = "La catégorie sélectionnée est invalide.";
+
+    } elseif (
+        $criteres["etat"] !== "" &&
+        !in_array($criteres["etat"], [
+            "disponible",
+            "en_location",
+            "maintenance",
+            "endommage"
+        ])
+    ) {
+        $error = "L'état sélectionné est invalide.";
+
+    } elseif (
+        $criteres["prix_min"] !== "" &&
+        (!is_numeric($criteres["prix_min"]) || $criteres["prix_min"] < 0)
+    ) {
+        $error = "Le prix minimum doit être un nombre positif.";
+
+    } elseif (
+        $criteres["prix_max"] !== "" &&
+        (!is_numeric($criteres["prix_max"]) || $criteres["prix_max"] < 0)
+    ) {
+        $error = "Le prix maximum doit être un nombre positif.";
+
+    } elseif (
+        $criteres["prix_min"] !== "" &&
+        $criteres["prix_max"] !== "" &&
+        $criteres["prix_min"] > $criteres["prix_max"]
+    ) {
+        $error = "Le prix minimum ne peut pas être supérieur au prix maximum.";
+
+    } elseif (
+        $criteres["stock_min"] !== "" &&
+        !ctype_digit((string) $criteres["stock_min"])
+    ) {
+        $error = "Le stock minimum doit être un entier positif.";
+
+    } elseif (
+        $criteres["stock_max"] !== "" &&
+        !ctype_digit((string) $criteres["stock_max"])
+    ) {
+        $error = "Le stock maximum doit être un entier positif.";
+
+    } elseif (
+        $criteres["stock_min"] !== "" &&
+        $criteres["stock_max"] !== "" &&
+        $criteres["stock_min"] > $criteres["stock_max"]
+    ) {
+        $error = "Le stock minimum ne peut pas être supérieur au stock maximum.";
     }
+
+    if ($error === "") {
+        $equipments = $this->equipment->search($criteres);
+    } else {
+        $equipments = [];
+    }
+
+    require "view/equipment/list.php";
+}
+
+    // Catalogue destiné aux clients
+    public function clientCatalogue()
+    {
+        $equipments = $this->equipment->getAvailable();
+
+        require "view/equipment/client_catalogue.php";
+    }
+
 }

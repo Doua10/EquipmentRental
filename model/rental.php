@@ -45,6 +45,22 @@ class Rental
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Récupérer les locations d'un client précis (JOIN équipement)
+    public function getByUserId($user_id)
+    {
+        $sql = "SELECT rentals.*,
+                       equipments.nom AS equipment_nom
+                FROM rentals
+                INNER JOIN equipments ON rentals.equipment_id = equipments.id
+                WHERE rentals.user_id = ?
+                ORDER BY rentals.id DESC";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$user_id]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Vérifier si l'équipement est disponible sur une période donnée
     // (on ignore les locations annulées ou terminées)
     // $exclude_id sert à ignorer la location elle-même quand on modifie
