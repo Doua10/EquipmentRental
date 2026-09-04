@@ -24,9 +24,9 @@
         <th>Équipement</th>
         <th>Début</th>
         <th>Fin</th>
-        <th>Durée (j)</th>
+        <th>Durée</th>
         <th>Prix / jour</th>
-        <th>Frais additionnels</th>
+        <th>Frais</th>
         <th>Prix total</th>
         <th>Statut</th>
         <th>Date retour</th>
@@ -60,7 +60,7 @@
             </td>
 
             <td>
-                <?= htmlspecialchars($rental["duree"]) ?>
+                <?= htmlspecialchars($rental["duree"]) ?> jour(s)
             </td>
 
             <td>
@@ -83,9 +83,13 @@
 
             <td>
                 <?php if (!empty($rental["date_retour"])): ?>
+
                     <?= htmlspecialchars($rental["date_retour"]) ?>
+
                 <?php else: ?>
+
                     -
+
                 <?php endif; ?>
             </td>
 
@@ -99,12 +103,13 @@
                 ): ?>
 
                     <a href="index.php?action=rental_return&id=<?= $rental["id"] ?>">
-                        <strong>Traiter le retour</strong>
+                        Traiter le retour
                     </a>
 
                     |
 
                 <?php endif; ?>
+
 
                 <a href="index.php?action=rental_edit&id=<?= $rental["id"] ?>">
                     Modifier
@@ -112,11 +117,21 @@
 
                 |
 
+
                 <a
                     href="index.php?action=rental_delete&id=<?= $rental["id"] ?>"
                     onclick="return confirm('Voulez-vous vraiment supprimer cette location ?');"
                 >
                     Supprimer
+                </a>
+
+                |
+
+
+                <a
+                    href="index.php?action=pdf_contrat&id=<?= $rental["id"] ?>"
+                >
+                    📄 Contrat PDF
                 </a>
 
             </td>

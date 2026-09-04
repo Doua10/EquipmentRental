@@ -1,4 +1,3 @@
-
 <?php
 
 session_start();
@@ -7,6 +6,8 @@ require_once "controller/CategoryController.php";
 require_once "controller/EquipmentController.php";
 require_once "controller/UserController.php";
 require_once "controller/RentalController.php";
+require_once "controller/PdfController.php";
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +22,7 @@ function requireLogin()
         exit;
     }
 }
+
 
 /*
 |--------------------------------------------------------------------------
@@ -103,7 +105,6 @@ switch ($action) {
 
     /* =========================================================
        CATEGORY
-       Responsable Inventaire uniquement
        ========================================================= */
 
     case "category_list":
@@ -148,7 +149,6 @@ switch ($action) {
 
     /* =========================================================
        EQUIPMENT
-       Responsable Inventaire uniquement
        ========================================================= */
 
     case "equipment_list":
@@ -199,23 +199,24 @@ switch ($action) {
         $controller->search();
 
         break;
+
+
     /* =========================================================
-   CLIENT CATALOGUE
-   Client uniquement
-   ========================================================= */
+       CLIENT CATALOGUE
+       ========================================================= */
 
-case "client_catalogue":
+    case "client_catalogue":
 
-    requireRole(["client"]);
+        requireRole(["client"]);
 
-    $controller = new EquipmentController();
-    $controller->clientCatalogue();
+        $controller = new EquipmentController();
+        $controller->clientCatalogue();
 
-    break;
+        break;
+
 
     /* =========================================================
        USER
-       Responsable Inventaire uniquement
        ========================================================= */
 
     case "user_list":
@@ -270,13 +271,14 @@ case "client_catalogue":
 
     /* =========================================================
        RENTAL
-       Agent Location
-       À développer ensuite
        ========================================================= */
 
     case "rental_list":
 
-        requireRole(["agent_location", "responsable_inventaire"]);
+        requireRole([
+            "agent_location",
+            "responsable_inventaire"
+        ]);
 
         $controller = new RentalController();
         $controller->list();
@@ -313,18 +315,22 @@ case "client_catalogue":
 
         break;
 
-        case "rental_return":
 
-        // Le Responsable Inventaire contrôle l'état, l'Agent enregistre les frais
-        requireRole(["agent_location", "responsable_inventaire"]);
+    case "rental_return":
+
+        requireRole([
+            "agent_location",
+            "responsable_inventaire"
+        ]);
 
         $controller = new RentalController();
         $controller->returnEquipment();
 
         break;
+
+
     /* =========================================================
-       RENTAL - CÔTÉ CLIENT
-       Client uniquement
+       RENTAL - CLIENT
        ========================================================= */
 
     case "client_rental_add":
@@ -343,6 +349,23 @@ case "client_catalogue":
 
         $controller = new RentalController();
         $controller->clientList();
+
+        break;
+
+
+    /* =========================================================
+       PDF - CONTRAT
+       ========================================================= */
+
+    case "pdf_contrat":
+
+        requireRole([
+            "agent_location",
+            "responsable_inventaire"
+        ]);
+
+        $controller = new PdfController();
+        $controller->contrat();
 
         break;
 
