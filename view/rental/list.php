@@ -38,11 +38,13 @@
         <tr>
 
             <td>
-                <?= $rental["id"] ?>
+                <?= htmlspecialchars($rental["id"]) ?>
             </td>
 
             <td>
-                <?= htmlspecialchars($rental["client_prenom"] . " " . $rental["client_nom"]) ?>
+                <?= htmlspecialchars(
+                    $rental["client_prenom"] . " " . $rental["client_nom"]
+                ) ?>
             </td>
 
             <td>
@@ -58,7 +60,7 @@
             </td>
 
             <td>
-                <?= $rental["duree"] ?>
+                <?= htmlspecialchars($rental["duree"]) ?>
             </td>
 
             <td>
@@ -70,7 +72,9 @@
             </td>
 
             <td>
-                <strong><?= htmlspecialchars($rental["prix_total"]) ?> DT</strong>
+                <strong>
+                    <?= htmlspecialchars($rental["prix_total"]) ?> DT
+                </strong>
             </td>
 
             <td>
@@ -78,12 +82,21 @@
             </td>
 
             <td>
-                <?= $rental["date_retour"] ? htmlspecialchars($rental["date_retour"]) : "-" ?>
+                <?php if (!empty($rental["date_retour"])): ?>
+                    <?= htmlspecialchars($rental["date_retour"]) ?>
+                <?php else: ?>
+                    -
+                <?php endif; ?>
             </td>
 
             <td>
 
-                <?php if (in_array($rental["statut"], ["confirmee", "en_cours"])): ?>
+                <?php if (
+                    in_array(
+                        $rental["statut"],
+                        ["confirmee", "en_cours"]
+                    )
+                ): ?>
 
                     <a href="index.php?action=rental_return&id=<?= $rental["id"] ?>">
                         <strong>Traiter le retour</strong>
@@ -99,7 +112,7 @@
 
                 |
 
-                
+                <a
                     href="index.php?action=rental_delete&id=<?= $rental["id"] ?>"
                     onclick="return confirm('Voulez-vous vraiment supprimer cette location ?');"
                 >
@@ -115,4 +128,5 @@
 </table>
 
 </body>
+
 </html>
