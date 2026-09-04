@@ -133,6 +133,12 @@
                 >
                     📄 Contrat PDF
                 </a>
+                |<a href="index.php?action=pdf_facture&id=<?= $rental["id"] ?>">
+                    🧾 Facture PDF
+                </a>
+                |<a href="index.php?action=pdf_recu&id=<?= $rental["id"] ?>">
+                    🧾 Reçu PDF
+                </a>
 
             </td>
 

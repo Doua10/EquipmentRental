@@ -328,6 +328,48 @@ switch ($action) {
 
         break;
 
+    /* =========================================================
+       PDF - CONTRAT
+       ========================================================= */
+
+    case "pdf_contrat":
+
+        requireRole([
+            "agent_location",
+            "responsable_inventaire"
+        ]);
+
+        $controller = new PdfController();
+        $controller->contrat();
+
+        break;
+
+
+    /* =========================================================
+       PDF - FACTURE
+       ========================================================= */
+
+    case "pdf_facture":
+
+        requireRole([
+            "agent_location",
+            "responsable_inventaire"
+        ]);
+
+        $controller = new PdfController();
+        $controller->facture();
+
+        break;
+    case "pdf_recu":
+        requireRole([
+            "agent_location",
+                "responsable_inventaire"
+        ]);
+
+        $controller = new PdfController();
+        $controller->recu();
+        
+        break;
 
     /* =========================================================
        RENTAL - CLIENT
