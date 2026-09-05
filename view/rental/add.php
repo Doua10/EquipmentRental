@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Ajouter une location</title>
+    <link rel="stylesheet" href="view/backoffice.css">
 </head>
 
 <body>

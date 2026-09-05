@@ -1,0 +1,155 @@
+/* Style responsive commun pour les pages BackOffice
+   (Category, Equipment, Rental, User)
+   A inclure via : <link rel="stylesheet" href="view/backoffice.css"> */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    color: #222;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+h2 {
+    font-size: 18px;
+    margin-top: 25px;
+    color: #333;
+}
+
+a {
+    color: #337ab7;
+}
+
+.top-actions {
+    margin-bottom: 15px;
+}
+
+.top-actions a {
+    display: inline-block;
+    background: #333;
+    color: white;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Formulaires */
+form {
+    background: white;
+    padding: 18px;
+    border-radius: 8px;
+    max-width: 700px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+label {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+select,
+textarea {
+    width: 100%;
+    padding: 9px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+button,
+input[type="submit"] {
+    margin-top: 18px;
+    padding: 10px 20px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    background: #555;
+}
+
+/* Tableaux : conteneur scrollable sur petit écran */
+.table-wrapper {
+    overflow-x: auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    margin-top: 10px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 640px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+th {
+    background: #333;
+    color: white;
+    white-space: nowrap;
+}
+
+tr:hover {
+    background: #f9f9f9;
+}
+
+/* Petits écrans (mobile) */
+@media (max-width: 700px) {
+
+    body {
+        padding: 12px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    form {
+        padding: 14px;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    th, td {
+        padding: 7px;
+    }
+
+    button,
+    input[type="submit"] {
+        width: 100%;
+    }
+}

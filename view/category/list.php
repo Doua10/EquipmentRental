@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Catégories</title>
+    <link rel="stylesheet" href="view/backoffice.css">
 </head>
 
 <body>
@@ -15,7 +16,7 @@
 </a>
 
 <br><br>
-
+<div class="table-wrapper">
 <table border="1" cellpadding="10">
 
     <tr>
@@ -63,6 +64,7 @@
     <?php endforeach; ?>
 
 </table>
+</div>
 
 </body>
 

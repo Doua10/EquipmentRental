@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Liste des équipements</title>
+    <link rel="stylesheet" href="view/backoffice.css">
 </head>
 
 <body>
@@ -108,7 +109,7 @@
 </form>
 
 <br>
-
+<div class="table-wrapper">
 <table border="1" cellpadding="8">
 
     <tr>
@@ -163,6 +164,6 @@
     <?php endif; ?>
 
 </table>
-
+</div>
 </body>
 </html>

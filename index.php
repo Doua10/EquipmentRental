@@ -336,7 +336,8 @@ switch ($action) {
 
         requireRole([
             "agent_location",
-            "responsable_inventaire"
+            "responsable_inventaire",
+            "client"
         ]);
 
         $controller = new PdfController();
@@ -353,7 +354,8 @@ switch ($action) {
 
         requireRole([
             "agent_location",
-            "responsable_inventaire"
+            "responsable_inventaire",
+            "client"
         ]);
 
         $controller = new PdfController();
@@ -363,7 +365,8 @@ switch ($action) {
     case "pdf_recu":
         requireRole([
             "agent_location",
-                "responsable_inventaire"
+            "responsable_inventaire",
+            "client"
         ]);
 
         $controller = new PdfController();
@@ -391,23 +394,6 @@ switch ($action) {
 
         $controller = new RentalController();
         $controller->clientList();
-
-        break;
-
-
-    /* =========================================================
-       PDF - CONTRAT
-       ========================================================= */
-
-    case "pdf_contrat":
-
-        requireRole([
-            "agent_location",
-            "responsable_inventaire"
-        ]);
-
-        $controller = new PdfController();
-        $controller->contrat();
 
         break;
 

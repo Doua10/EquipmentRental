@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Modifier une location</title>
+    <link rel="stylesheet" href="view/backoffice.css">
 </head>
 
 <body>

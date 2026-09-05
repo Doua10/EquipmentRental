@@ -18,6 +18,15 @@ class PdfController
         $this->pdf = new Pdf();
     }
 
+    // Un client ne peut télécharger que les documents de SES propres locations
+    private function checkAccess($rental)
+    {
+        if ($_SESSION["role"] === "client" && $rental["user_id"] != $_SESSION["user_id"]) {
+            echo "Accès refusé : ce document ne vous appartient pas.";
+            exit;
+        }
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Contrat de location
@@ -39,6 +48,8 @@ class PdfController
             echo "Location introuvable.";
             return;
         }
+
+        $this->checkAccess($rental);
 
         $lines = [];
 
@@ -103,6 +114,8 @@ class PdfController
             echo "Location introuvable.";
             return;
         }
+
+        $this->checkAccess($rental);
 
         $lines = [];
 
@@ -170,6 +183,8 @@ class PdfController
         echo "Location introuvable.";
         return;
     }
+
+    $this->checkAccess($rental);
 
     $lines = [];
 

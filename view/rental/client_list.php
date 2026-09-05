@@ -109,6 +109,26 @@ $statutLabels = [
             margin-top: 12px;
         }
 
+        .pdf-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .pdf-links a {
+            font-size: 13px;
+            color: #333;
+            text-decoration: none;
+            background: #eee;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .pdf-links a:hover {
+            background: #ddd;
+        }
+
         .empty {
             background: white;
             padding: 25px;
@@ -205,6 +225,20 @@ $statutLabels = [
                     <span class="badge" style="background: <?= $color ?>;">
                         <?= htmlspecialchars($label) ?>
                     </span>
+
+                    <?php if (in_array($rental["statut"], ["confirmee", "en_cours", "terminee"])): ?>
+                        <div class="pdf-links">
+                            <a href="index.php?action=pdf_contrat&id=<?= $rental["id"] ?>">
+                                📄 Contrat
+                            </a>
+                            <a href="index.php?action=pdf_facture&id=<?= $rental["id"] ?>">
+                                🧾 Facture
+                            </a>
+                            <a href="index.php?action=pdf_recu&id=<?= $rental["id"] ?>">
+                                🧾 Reçu
+                            </a>
+                        </div>
+                    <?php endif; ?>
 
                 </div>
 
