@@ -22,6 +22,7 @@
 <form
     method="POST"
     action="index.php?action=user_edit&id=<?= $user["id"] ?>"
+    id="userForm"
 >
 
     <label>Nom :</label><br>
@@ -29,6 +30,7 @@
     <input
         type="text"
         name="nom"
+        id="nom"
         value="<?= htmlspecialchars($user["nom"]) ?>"
         required
     >
@@ -40,6 +42,7 @@
     <input
         type="text"
         name="prenom"
+        id="prenom"
         value="<?= htmlspecialchars($user["prenom"]) ?>"
         required
     >
@@ -51,6 +54,7 @@
     <input
         type="email"
         name="email"
+        id="email"
         value="<?= htmlspecialchars($user["email"]) ?>"
         required
     >
@@ -62,6 +66,7 @@
     <input
         type="text"
         name="telephone"
+        id="telephone"
         value="<?= htmlspecialchars($user["telephone"]) ?>"
         required
     >
@@ -73,6 +78,7 @@
     <input
         type="password"
         name="mot_de_passe"
+        id="mot_de_passe"
         placeholder="Laisser vide pour garder l'ancien"
     >
 
@@ -80,7 +86,11 @@
 
     <label>Rôle :</label><br>
 
-    <select name="role" required>
+    <select
+        name="role"
+        id="role"
+        required
+    >
 
         <option
             value="responsable_inventaire"
@@ -118,6 +128,97 @@
 <a href="index.php?action=user_list">
     Retour à la liste
 </a>
+
+<script>
+
+const form = document.getElementById("userForm");
+
+form.addEventListener("submit", function (e) {
+
+    const nom =
+        document.getElementById("nom").value.trim();
+
+    const prenom =
+        document.getElementById("prenom").value.trim();
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const telephone =
+        document.getElementById("telephone").value.trim();
+
+    const motDePasse =
+        document.getElementById("mot_de_passe").value;
+
+    const role =
+        document.getElementById("role").value;
+
+    if (nom === "") {
+        alert("Le nom est obligatoire.");
+        e.preventDefault();
+        return;
+    }
+
+    if (nom.length < 2) {
+        alert("Le nom doit contenir au moins 2 caractères.");
+        e.preventDefault();
+        return;
+    }
+
+    if (prenom === "") {
+        alert("Le prénom est obligatoire.");
+        e.preventDefault();
+        return;
+    }
+
+    if (prenom.length < 2) {
+        alert("Le prénom doit contenir au moins 2 caractères.");
+        e.preventDefault();
+        return;
+    }
+
+    const emailRegex =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+        alert("Veuillez saisir une adresse email valide.");
+        e.preventDefault();
+        return;
+    }
+
+    const telephoneRegex =
+        /^[0-9]{8}$/;
+
+    if (!telephoneRegex.test(telephone)) {
+        alert(
+            "Le numéro de téléphone doit contenir exactement 8 chiffres."
+        );
+        e.preventDefault();
+        return;
+    }
+
+    // Le mot de passe est facultatif en modification.
+    // Mais s'il est rempli, il doit contenir au moins 6 caractères.
+    if (
+        motDePasse !== "" &&
+        motDePasse.length < 6
+    ) {
+        alert(
+            "Le nouveau mot de passe doit contenir au moins 6 caractères."
+        );
+        e.preventDefault();
+        return;
+    }
+
+    if (role === "") {
+        alert("Veuillez choisir un rôle.");
+        e.preventDefault();
+        return;
+    }
+
+});
+
+</script>
 
 </body>
 
