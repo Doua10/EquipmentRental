@@ -77,28 +77,98 @@
 </a>
 
 <script>
-// Contrôle de saisie en JS : date de retour cohérente + estimation du total
 const form = document.getElementById("returnForm");
-const dateRetour = document.getElementById("date_retour");
-const frais = document.getElementById("frais_additionnels");
-const totalEstime = document.getElementById("totalEstime");
 
-const prixInitial = <?= (float) ($rental["duree"] * $rental["prix_jour"]) ?>;
-const dateDebutMin = "<?= htmlspecialchars($rental["date_debut"]) ?>";
+const dateRetour =
+    document.getElementById("date_retour");
+
+const frais =
+    document.getElementById("frais_additionnels");
+
+const etatRetour =
+    document.querySelector('select[name="etat_retour"]');
+
+const totalEstime =
+    document.getElementById("totalEstime");
+
+const prixInitial =
+    <?= (float) ($rental["duree"] * $rental["prix_jour"]) ?>;
+
+const dateDebutMin =
+    "<?= htmlspecialchars($rental["date_debut"]) ?>";
+
 
 function updateTotal() {
-    const f = parseFloat(frais.value) || 0;
-    totalEstime.textContent = "Total à facturer : " + (prixInitial + f).toFixed(2) + " DT";
+
+    const fraisValue =
+        parseFloat(frais.value) || 0;
+
+    totalEstime.textContent =
+        "Total à facturer : " +
+        (prixInitial + fraisValue).toFixed(2) +
+        " DT";
 }
 
-frais.addEventListener("input", updateTotal);
+frais.addEventListener(
+    "input",
+    updateTotal
+);
+
 updateTotal();
 
+
 form.addEventListener("submit", function (e) {
-    if (dateRetour.value < dateDebutMin) {
-        alert("La date de retour ne peut pas être avant la date de début de location.");
+
+    // Date obligatoire
+    if (dateRetour.value === "") {
+
+        alert(
+            "Veuillez saisir la date de retour."
+        );
+
         e.preventDefault();
+        return;
     }
+
+    // Date cohérente
+    if (dateRetour.value < dateDebutMin) {
+
+        alert(
+            "La date de retour ne peut pas être avant la date de début de location."
+        );
+
+        e.preventDefault();
+        return;
+    }
+
+    // Etat obligatoire
+    if (etatRetour.value === "") {
+
+        alert(
+            "Veuillez choisir l'état de l'équipement au retour."
+        );
+
+        e.preventDefault();
+        return;
+    }
+
+    // Frais valides
+    const fraisValue =
+        parseFloat(frais.value);
+
+    if (
+        frais.value !== "" &&
+        (isNaN(fraisValue) || fraisValue < 0)
+    ) {
+
+        alert(
+            "Les frais additionnels doivent être positifs ou égaux à 0."
+        );
+
+        e.preventDefault();
+        return;
+    }
+
 });
 </script>
 

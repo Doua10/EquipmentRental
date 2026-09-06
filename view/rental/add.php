@@ -77,45 +77,153 @@
 </a>
 
 <script>
-// Contrôle de saisie en JS : dates cohérentes + estimation du prix
 const form = document.getElementById("rentalForm");
 const dateDebut = document.getElementById("date_debut");
 const dateFin = document.getElementById("date_fin");
 const equipmentSelect = document.getElementById("equipment_id");
+const clientSelect = document.querySelector('select[name="user_id"]');
 const estimation = document.getElementById("estimation");
 
 function updateEstimation() {
+
     const debut = new Date(dateDebut.value);
     const fin = new Date(dateFin.value);
-    const option = equipmentSelect.options[equipmentSelect.selectedIndex];
-    const prix = option ? parseFloat(option.getAttribute("data-prix")) : null;
 
-    if (dateDebut.value && dateFin.value && prix && fin >= debut) {
-        const duree = Math.round((fin - debut) / (1000 * 60 * 60 * 24)) + 1;
-        const total = (duree * prix).toFixed(2);
-        estimation.textContent = "Durée estimée : " + duree + " jour(s) — Prix estimé : " + total + " DT";
+    const option =
+        equipmentSelect.options[equipmentSelect.selectedIndex];
+
+    const prix =
+        option ? parseFloat(option.getAttribute("data-prix")) : null;
+
+    if (
+        dateDebut.value &&
+        dateFin.value &&
+        prix &&
+        fin >= debut
+    ) {
+
+        const duree =
+            Math.round(
+                (fin - debut) /
+                (1000 * 60 * 60 * 24)
+            ) + 1;
+
+        const total =
+            (duree * prix).toFixed(2);
+
+        estimation.textContent =
+            "Durée estimée : " +
+            duree +
+            " jour(s) — Prix estimé : " +
+            total +
+            " DT";
+
     } else {
+
         estimation.textContent = "";
     }
 }
 
-dateDebut.addEventListener("change", updateEstimation);
-dateFin.addEventListener("change", updateEstimation);
-equipmentSelect.addEventListener("change", updateEstimation);
+dateDebut.addEventListener(
+    "change",
+    updateEstimation
+);
+
+dateFin.addEventListener(
+    "change",
+    updateEstimation
+);
+
+equipmentSelect.addEventListener(
+    "change",
+    updateEstimation
+);
 
 form.addEventListener("submit", function (e) {
-    const option = equipmentSelect.options[equipmentSelect.selectedIndex];
 
-    if (option && option.getAttribute("data-etat") !== "disponible") {
-        alert("Cet équipement n'est pas disponible actuellement.");
+    const option =
+        equipmentSelect.options[
+            equipmentSelect.selectedIndex
+        ];
+
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+    const debut =
+        new Date(dateDebut.value);
+
+    const fin =
+        new Date(dateFin.value);
+
+    // Client obligatoire
+    if (clientSelect.value === "") {
+
+        alert("Veuillez choisir un client.");
+
         e.preventDefault();
         return;
     }
 
-    if (dateFin.value < dateDebut.value) {
-        alert("La date de fin doit être après la date de début.");
+    // Équipement obligatoire
+    if (equipmentSelect.value === "") {
+
+        alert("Veuillez choisir un équipement.");
+
         e.preventDefault();
+        return;
     }
+
+    // Vérification état
+    if (
+        option &&
+        option.getAttribute("data-etat") !== "disponible"
+    ) {
+
+        alert(
+            "Cet équipement n'est pas disponible actuellement."
+        );
+
+        e.preventDefault();
+        return;
+    }
+
+    // Dates obligatoires
+    if (
+        dateDebut.value === "" ||
+        dateFin.value === ""
+    ) {
+
+        alert(
+            "Veuillez saisir les dates de début et de fin."
+        );
+
+        e.preventDefault();
+        return;
+    }
+
+    // Date début non passée
+    if (debut < today) {
+
+        alert(
+            "La date de début ne peut pas être dans le passé."
+        );
+
+        e.preventDefault();
+        return;
+    }
+
+    // Date fin cohérente
+    if (fin < debut) {
+
+        alert(
+            "La date de fin doit être après ou égale à la date de début."
+        );
+
+        e.preventDefault();
+        return;
+    }
+
 });
 </script>
 

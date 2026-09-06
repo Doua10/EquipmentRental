@@ -87,16 +87,79 @@
 </a>
 
 <script>
-// Contrôle de saisie en JS : la date de fin doit être après la date de début
 const form = document.getElementById("rentalForm");
+
 const dateDebut = document.getElementById("date_debut");
 const dateFin = document.getElementById("date_fin");
 
+const statut = document.querySelector('select[name="statut"]');
+
+const frais = document.querySelector(
+    'input[name="frais_additionnels"]'
+);
+
+const dateRetour = document.querySelector(
+    'input[name="date_retour"]'
+);
+
 form.addEventListener("submit", function (e) {
-    if (dateFin.value < dateDebut.value) {
-        alert("La date de fin doit être après la date de début.");
+
+    if (
+        dateDebut.value === "" ||
+        dateFin.value === ""
+    ) {
+        alert(
+            "Veuillez saisir les dates de début et de fin."
+        );
+
         e.preventDefault();
+        return;
     }
+
+    if (dateFin.value < dateDebut.value) {
+        alert(
+            "La date de fin doit être après ou égale à la date de début."
+        );
+
+        e.preventDefault();
+        return;
+    }
+
+    const fraisValue = parseFloat(frais.value);
+
+    if (
+        frais.value !== "" &&
+        (isNaN(fraisValue) || fraisValue < 0)
+    ) {
+        alert(
+            "Les frais additionnels doivent être positifs ou égaux à 0."
+        );
+
+        e.preventDefault();
+        return;
+    }
+
+    if (statut.value === "terminee") {
+
+        if (dateRetour.value === "") {
+            alert(
+                "La date de retour est obligatoire pour une location terminée."
+            );
+
+            e.preventDefault();
+            return;
+        }
+
+        if (dateRetour.value < dateDebut.value) {
+            alert(
+                "La date de retour ne peut pas être avant la date de début."
+            );
+
+            e.preventDefault();
+            return;
+        }
+    }
+
 });
 </script>
 

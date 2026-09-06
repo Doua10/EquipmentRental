@@ -224,8 +224,9 @@ if (session_status() === PHP_SESSION_NONE) {
         }
 
         if (fin < debut) {
-            alert("La date de fin doit être après la date de début.");
+            alert("La date de fin doit être après ou égale à la date de début.");
             e.preventDefault();
+            return;
         }
     });
 </script>
