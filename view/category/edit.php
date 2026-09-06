@@ -11,31 +11,37 @@
 
 <h1>Modifier une catégorie</h1>
 
-<?php if (isset($error)): ?>
-
+<?php if (isset($message)): ?>
     <p style="color:red;">
-        <?= htmlspecialchars($error) ?>
+        <?= htmlspecialchars($message) ?>
     </p>
-
 <?php endif; ?>
 
-<form method="POST">
+<form
+    method="POST"
+    action="index.php?action=category_edit&id=<?= $category["id"] ?>"
+    id="categoryForm"
+>
 
-    <label>Nom :</label>
-    <br>
+    <label>Nom :</label><br>
 
     <input
         type="text"
         name="nom"
-        value="<?= htmlspecialchars($category['nom']) ?>"
+        id="nom"
+        value="<?= htmlspecialchars($category["nom"]) ?>"
+        required
     >
 
     <br><br>
 
-    <label>Description :</label>
-    <br>
+    <label>Description :</label><br>
 
-    <textarea name="description"><?= htmlspecialchars($category['description']) ?></textarea>
+    <textarea
+        name="description"
+        id="description"
+        rows="5"
+    ><?= htmlspecialchars($category["description"]) ?></textarea>
 
     <br><br>
 
@@ -51,6 +57,49 @@
     Retour à la liste
 </a>
 
-</body>
+<script>
+const form = document.getElementById("categoryForm");
 
+form.addEventListener("submit", function (e) {
+
+    const nom =
+        document.getElementById("nom").value.trim();
+
+    const description =
+        document.getElementById("description").value.trim();
+
+    if (nom === "") {
+        alert("Le nom de la catégorie est obligatoire.");
+        e.preventDefault();
+        return;
+    }
+
+    if (nom.length < 2) {
+        alert(
+            "Le nom de la catégorie doit contenir au moins 2 caractères."
+        );
+        e.preventDefault();
+        return;
+    }
+
+    if (nom.length > 100) {
+        alert(
+            "Le nom de la catégorie ne doit pas dépasser 100 caractères."
+        );
+        e.preventDefault();
+        return;
+    }
+
+    if (description.length > 500) {
+        alert(
+            "La description ne doit pas dépasser 500 caractères."
+        );
+        e.preventDefault();
+        return;
+    }
+
+});
+</script>
+
+</body>
 </html>
