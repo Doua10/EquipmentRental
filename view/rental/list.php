@@ -111,52 +111,64 @@
 
             <td>
 
-                <?php if (
-                    in_array(
-                        $rental["statut"],
-                        ["confirmee", "en_cours"]
-                    )
-                ): ?>
+    <?php if (
+        in_array($rental["statut"], ["confirmee", "en_cours"]) &&
+        isset($_SESSION["role"]) &&
+        in_array(
+            $_SESSION["role"],
+            ["responsable_inventaire", "agent_location"]
+        )
+    ): ?>
 
-                    <a href="index.php?action=rental_return&id=<?= $rental["id"] ?>">
-                        Traiter le retour
-                    </a>
+        <a href="index.php?action=rental_return&id=<?= $rental["id"] ?>">
+            Traiter le retour
+        </a>
 
-                    |
+        |
 
-                <?php endif; ?>
-
-
-                <a href="index.php?action=rental_edit&id=<?= $rental["id"] ?>">
-                    Modifier
-                </a>
-
-                |
+    <?php endif; ?>
 
 
-                <a
-                    href="index.php?action=rental_delete&id=<?= $rental["id"] ?>"
-                    onclick="return confirm('Voulez-vous vraiment supprimer cette location ?');"
-                >
-                    Supprimer
-                </a>
+    <?php if (
+        isset($_SESSION["role"]) &&
+        $_SESSION["role"] === "agent_location"
+    ): ?>
 
-                |
+        <a href="index.php?action=rental_edit&id=<?= $rental["id"] ?>">
+            Modifier
+        </a>
+
+        |
+
+        <a
+            href="index.php?action=rental_delete&id=<?= $rental["id"] ?>"
+            onclick="return confirm('Voulez-vous vraiment supprimer cette location ?');"
+        >
+            Supprimer
+        </a>
+
+        |
+
+    <?php endif; ?>
 
 
-                <a
-                    href="index.php?action=pdf_contrat&id=<?= $rental["id"] ?>"
-                >
-                    📄 Contrat PDF
-                </a>
-                |<a href="index.php?action=pdf_facture&id=<?= $rental["id"] ?>">
-                    🧾 Facture PDF
-                </a>
-                |<a href="index.php?action=pdf_recu&id=<?= $rental["id"] ?>">
-                    🧾 Reçu PDF
-                </a>
+    <a href="index.php?action=pdf_contrat&id=<?= $rental["id"] ?>">
+        📄 Contrat PDF
+    </a>
 
-            </td>
+    |
+
+    <a href="index.php?action=pdf_facture&id=<?= $rental["id"] ?>">
+        🧾 Facture PDF
+    </a>
+
+    |
+
+    <a href="index.php?action=pdf_recu&id=<?= $rental["id"] ?>">
+        🧾 Reçu PDF
+    </a>
+
+</td>
 
         </tr>
 
