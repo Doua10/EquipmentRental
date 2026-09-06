@@ -34,6 +34,7 @@ class EquipmentController
     // Ajouter un équipement
     public function add()
     {
+        $categories = $this->category->getAll();
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             $nom = trim($_POST["nom"]);
@@ -102,6 +103,8 @@ class EquipmentController
             echo "Équipement introuvable.";
             return;
         }
+
+        $categories = $this->category->getAll();
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
 

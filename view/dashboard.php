@@ -312,6 +312,20 @@ $role = $_SESSION['role'] ?? '';
 
             </div>
 
+            <div class="card">
+                
+            <h3>📋 Locations / Retours</h3>
+            
+            <p>
+                Consulter les locations et valider les retours.
+            </p>
+            
+            <a href="index.php?action=rental_list">
+                Gérer
+            </a>
+        
+        </div>
+
         <?php elseif ($role === 'agent_location'): ?>
 
             <div class="card">

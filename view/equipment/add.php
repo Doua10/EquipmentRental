@@ -11,6 +11,18 @@
 
 <h1>Ajouter un équipement</h1>
 
+<div class="top-actions">
+
+    <a href="index.php?action=dashboard">
+        🏠 Tableau de bord
+    </a>
+
+    <a href="index.php?action=equipment_list">
+        ← Retour à la liste
+    </a>
+
+</div>
+
 <?php if (isset($message)): ?>
     <p style="color:red;">
         <?= htmlspecialchars($message) ?>
@@ -96,14 +108,7 @@
             -- Choisir une catégorie --
         </option>
 
-        <?php
-        require_once "model/Category.php";
-
-        $categoryModel = new Category($this->pdo);
-        $categories = $categoryModel->getAll();
-
-        foreach ($categories as $category):
-        ?>
+        <?php foreach ($categories as $category): ?>
 
             <option value="<?= $category["id"] ?>">
                 <?= htmlspecialchars($category["nom"]) ?>
@@ -122,10 +127,6 @@
 </form>
 
 <br>
-
-<a href="index.php?action=equipment_list">
-    Retour à la liste
-</a>
 
 <script>
 const form = document.getElementById("equipmentForm");

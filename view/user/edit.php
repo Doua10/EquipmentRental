@@ -11,6 +11,17 @@
 
 <h1>Modifier un utilisateur</h1>
 
+<div class="top-actions">
+
+    <a href="index.php?action=dashboard">
+        🏠 Tableau de bord
+    </a>
+
+    <a href="index.php?action=user_list">
+        ← Retour à la liste
+    </a>
+</div>
+
 <?php if (isset($message)): ?>
 
     <p style="color:red;">
@@ -124,10 +135,6 @@
 </form>
 
 <br>
-
-<a href="index.php?action=user_list">
-    Retour à la liste
-</a>
 
 <script>
 

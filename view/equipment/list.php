@@ -11,11 +11,17 @@
 
 <h1>Liste des équipements</h1>
 
-<a href="index.php?action=equipment_add">
-    ➕ Ajouter un équipement
-</a>
+<div class="top-actions">
 
-<br><br>
+    <a href="index.php?action=dashboard">
+        🏠 Tableau de bord
+    </a>
+
+    <a href="index.php?action=equipment_add">
+        ➕ Ajouter un équipement
+    </a>
+
+</div>
 
 <h2>Recherche multicritères</h2>
 

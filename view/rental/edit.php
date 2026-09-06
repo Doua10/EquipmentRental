@@ -11,6 +11,17 @@
 
 <h1>Modifier une location</h1>
 
+<div class="top-actions">
+
+    <a href="index.php?action=dashboard">
+        🏠 Tableau de bord
+    </a>
+
+    <a href="index.php?action=rental_list">
+        ← Retour à la liste
+    </a>
+</div>
+
 <?php if (isset($message)): ?>
     <p style="color:red;">
         <?= htmlspecialchars($message) ?>
@@ -81,10 +92,6 @@
 </form>
 
 <br>
-
-<a href="index.php?action=rental_list">
-    Retour à la liste
-</a>
 
 <script>
 const form = document.getElementById("rentalForm");

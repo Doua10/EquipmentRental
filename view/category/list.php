@@ -11,9 +11,17 @@
 
 <h1>Liste des catégories</h1>
 
-<a href="index.php?action=category_add">
-    Ajouter une catégorie
-</a>
+<div class="top-actions">
+
+    <a href="index.php?action=dashboard">
+        🏠 Tableau de bord
+    </a>
+
+    <a href="index.php?action=category_add">
+        ➕ Ajouter une catégorie
+    </a>
+
+</div>
 
 <br><br>
 <div class="table-wrapper">

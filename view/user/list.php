@@ -11,11 +11,17 @@
 
 <h1>Liste des utilisateurs</h1>
 
-<a href="index.php?action=user_add">
-    ➕ Ajouter un utilisateur
-</a>
+<div class="top-actions">
 
-<br><br>
+    <a href="index.php?action=dashboard">
+        🏠 Tableau de bord
+    </a>
+
+    <a href="index.php?action=user_add">
+        ➕ Ajouter un utilisateur
+    </a>
+
+</div>
 
 <form method="GET" action="index.php">
 

@@ -11,9 +11,24 @@
 
 <h1>Liste des locations</h1>
 
-<a href="index.php?action=rental_add">
-    ➕ Ajouter une location
-</a>
+<div class="top-actions">
+
+    <a href="index.php?action=dashboard">
+        🏠 Tableau de bord
+    </a>
+
+    <?php if (
+        isset($_SESSION["role"]) &&
+        $_SESSION["role"] === "agent_location"
+    ): ?>
+
+        <a href="index.php?action=rental_add">
+            ➕ Ajouter une location
+        </a>
+
+    <?php endif; ?>
+
+</div>
 
 <br><br>
 <div class="table-wrapper">
